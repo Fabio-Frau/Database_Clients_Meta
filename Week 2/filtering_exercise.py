@@ -6,9 +6,11 @@ connection=connector.connect(
                              user="mario", # use your own
                              password="cuisine", # use your own
                             )
+print("Connection between MySQL and Python is established.\n")
 
 # Create cursor object to communicate with entire MySQL database
 cursor = connection.cursor()
+print("Cursor is created to communicate with the MySQL using Python.\n")
 
 # If exist, drop the database first, and create again
 try:
@@ -17,7 +19,7 @@ except:
     cursor.execute("drop database little_lemon")
     cursor.execute("CREATE DATABASE little_lemon")
 print("The database little_lemon is created.\n")    
-
+    
 # Set little_lemon database for use 
 cursor.execute("USE little_lemon")
 print("The database little_lemon is set for use.\n")
@@ -49,6 +51,7 @@ PRIMARY KEY (MenuID,ItemID)
 cursor.execute(create_menu_table)
 print("Menu table is created.\n")
 
+
 # The SQL query for Bookings table is:
 create_booking_table="""
 CREATE TABLE Bookings (
@@ -65,6 +68,7 @@ PRIMARY KEY (BookingID)
 cursor.execute(create_booking_table)
 print("Bookings table is created.\n")
 
+
 # The SQL query for Bookings table is:
 create_orders_table="""
 CREATE TABLE Orders (
@@ -80,12 +84,6 @@ PRIMARY KEY (OrderID,TableNo)
 # Create Orders table
 cursor.execute(create_orders_table)
 print("Orders table is created.\n")
-
-# Confirm if the tables are created
-print("Following tables are created in the little_lemon database.\n")
-cursor.execute("SHOW TABLES")
-for table in cursor:
-    print(table)
 
 
 #*******************************************************#
@@ -157,92 +155,132 @@ VALUES
 (4, 5, 3, 4, 1, 40),
 (5, 8, 1, 5, 1, 43);"""
 
+
 print("Inserting data in MenuItems table.")
 # Populate MenuItems table
 cursor.execute(insert_menuitmes)
-print("Total number of rows in MenuItem table: ", cursor.rowcount)
+print("Total number of rows in MenuItem table: {}\n".format(cursor.rowcount))
 # Once the query is executed, you commit the change into the database 
 connection.commit()
 
 print("Inserting data in Menus table.")
 # Populate MenuItems table
 cursor.execute(insert_menu)
-print("Total number of rows in Menu table: ", cursor.rowcount)
+print("Total number of rows in Menu table: {}\n".format(cursor.rowcount))
 connection.commit()
 
 print("Inserting data in Bookings table.")
 # Populate Bookings table
 cursor.execute(insert_bookings)
-print("Total number of rows in Bookings table: ", cursor.rowcount)
+print("Total number of rows in Bookings table: {}\n".format(cursor.rowcount))
 connection.commit()
 
 print("Inserting data in Orders table.")
 # Populate Orders table
 cursor.execute(insert_orders)
-print("Total number of rows in Orders table: ", cursor.rowcount)
+print("Total number of rows in Orders table: {}\n".format(cursor.rowcount))
 connection.commit()
 
+print("""The database "little_lemon" is ready for use.""")
 
-# Read query is:
-all_bookings = """SELECT GuestFirstName, GuestLastName, 
-TableNo FROM bookings;"""
+###########################################################☺
 
+# Task 1
+# The SQL query is:
+filtering_and_sorting = """SELECT TableNo, 
+GuestFirstName, GuestLastName, EmployeeID  
+FROM Bookings 
+WHERE TableNo= 12;"""
 
-# Eexecute query 
-cursor.execute(all_bookings)
+# Execute query
+cursor.execute(filtering_and_sorting)
 
-# Fetch all results that satisfy the query 
+# Fetch records 
 results = cursor.fetchall()
 
 # Retrieve column names
-cols = cursor.column_names
+columns = cursor.column_names
 
-# Print column names and records from results using for loop
-print("""Data in the "Bookings" table:""")
-print(cols)
+# Print column names
+print(columns)
+
+# Print query results
 for result in results:
     print(result)
 
 
-# Query to retrieve all bookings is: 
-all_menus = """SELECT * FROM Menus;"""
+# Task 2 option 1
+# Resetting cursor
+#cursor.fetchall()
 
-# Execute query 
-cursor.execute(all_menus)
+# The SQL query is:
+filtering_and_sorting = """SELECT BookingID, BillAmount
+FROM
+Orders ORDER BY BillAmount DESC;"""
 
-# Fetch fist 3 records in results
-results = cursor.fetchmany(size=3)
+# Execute query
+cursor.execute(filtering_and_sorting)
+
+# Fetch records 
+results = cursor.fetchmany(size=2)#fetchall()
 
 # Retrieve column names
-cols = cursor.column_names
+columns = cursor.column_names
 
-# Print column names and records from results using for loop
-print("""Data in the "Menu" table:""")
-print(cols)
+# Print column names
+print(columns)
+
+# Print query results
 for result in results:
     print(result)
 
+# Resetting cursor
+cursor.fetchall()
 
-# Remaining records after fetching the first three
-results= cursor.fetchall()
-for result in results:
-    print(result)
+# Task 2 Option 2
 
-# Query to retrieve only first three records from the bookings table is:
-all_menus = """SELECT * FROM Menus LIMIT 3;"""
+# The SQL query is:
+filtering_and_sorting = """SELECT BookingID, BillAmount
+FROM
+Orders ORDER BY BillAmount DESC LIMIT 2;"""
 
-# Execute query 
-cursor.execute(all_menus)
+# Execute query
+cursor.execute(filtering_and_sorting)
 
-# Fetch fist 3 records in results
-results = cursor.fetchall()   
+# Fetch records 
+results = cursor.fetchall()
 
 # Retrieve column names
-cols = cursor.column_names
+columns = cursor.column_names
 
-# Print column names and records from results using for loop
-print("""Data in the "Menu" table:""")
-print(cols)
+# Print column names
+print(columns)
+
+# Print query results
+for result in results:
+    print(result)
+
+# Task 3
+
+# The SQL query is:
+filtering_and_sorting = """SELECT * 
+FROM MenuItems 
+WHERE (Type = 'Starters' OR Type = 'Desserts')
+ORDER BY Price ASC;"""
+
+# Execute query
+cursor.execute(filtering_and_sorting)
+
+# Fetch records 
+results = cursor.fetchall()
+
+# Retrieve column names
+columns = cursor.column_names
+
+# Print column names
+print(columns)
+
+# Print query results
 for result in results:
     print(result)
 
@@ -255,3 +293,4 @@ if connection.is_connected():
     print("MySQL connection is closed.")
 else:
     print("Connection is already closed")
+
