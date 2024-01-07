@@ -73,7 +73,7 @@ guests = ["Anna", "Marcos", "Diana", "Joakim", "Hiroki"]
 for guest in guests:
     try:
         guest_connected = pool.get_connection()
-        print("[{}] is connected.\n".format(guest))
+        
     except:
         print("No more connections are available.")
         print("Adding new connection in the pool.")
