@@ -7,7 +7,7 @@ try:
                                         user = "mario", password ="cuisine")
     
     insert_stmt = """INSERT INTO Laptop (Id, Name, Price, Purchase_date)
-                    VALUES (15, 'Lenovo ThinkPad P71', 6459, '2019-08-14');"""
+                    VALUES (1, 'Lenovo ThinkPad P71', 6459, '2019-08-14');"""
     
     cursor = connection.cursor()
     cursor.execute(insert_stmt)
